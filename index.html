@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>Bass Coach 30</title>
+  <meta name="description" content="Luyện bass với Sonicake Pocket Master: lên dây, đo độ trễ, tập và chấm điểm các bài Tuần 1–2.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%233442C9'/%3E%3Cg stroke='%23fff' stroke-linecap='round'%3E%3Cpath d='M7 9h18' stroke-width='1.3'/%3E%3Cpath d='M7 14h18' stroke-width='1.8'/%3E%3Cpath d='M7 19h18' stroke-width='2.4'/%3E%3Cpath d='M7 24h18' stroke-width='3'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="css/app.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" data-goto="home">
+      <svg class="brand-mark" viewBox="0 0 28 22" aria-hidden="true">
+        <line x1="2" y1="3" x2="26" y2="3" stroke-width="1.2"/>
+        <line x1="2" y1="8.5" x2="26" y2="8.5" stroke-width="1.7"/>
+        <line x1="2" y1="14" x2="26" y2="14" stroke-width="2.3"/>
+        <line x1="2" y1="19.5" x2="26" y2="19.5" stroke-width="3"/>
+      </svg>
+      <span>Bass Coach 30</span>
+    </a>
+    <button class="status" id="status" type="button" data-goto="connect">Chưa kết nối</button>
+  </header>
+
+  <main>
+    <section class="view" data-view="home">
+      <p class="banner" id="insecure-banner" hidden>Trang đang mở qua địa chỉ không bảo mật nên trình duyệt sẽ chặn thu âm. Hãy mở qua https:// (GitHub Pages) hoặc http://localhost.</p>
+      <h1 tabindex="-1">Bài tập tuần 1–2</h1>
+      <p class="lead">Làm ba bước chuẩn bị một lần mỗi buổi, rồi chọn bài. App nghe tiếng bass từ Pocket Master qua cáp USB và chấm từng nốt.</p>
+      <ol class="setup" aria-label="Chuẩn bị">
+        <li><button type="button" class="setup-step" data-goto="connect"><span class="inlay" id="dot-connect">1</span><span class="setup-text"><span class="setup-name">Kết nối</span><span class="setup-state" id="state-connect">Chưa bật</span></span></button></li>
+        <li><button type="button" class="setup-step" data-goto="tune"><span class="inlay" id="dot-tune">2</span><span class="setup-text"><span class="setup-name">Lên dây</span><span class="setup-state" id="state-tune">Nên làm mỗi buổi</span></span></button></li>
+        <li><button type="button" class="setup-step" data-goto="calibrate"><span class="inlay" id="dot-calibrate">3</span><span class="setup-text"><span class="setup-name">Đo độ trễ</span><span class="setup-state" id="state-calibrate">Chưa đo</span></span></button></li>
+      </ol>
+      <div id="lesson-list"></div>
+      <p class="fineprint">Âm thanh được xử lý ngay trong trình duyệt của bạn, không gửi đi đâu. Lịch sử tập lưu trên chính thiết bị này.</p>
+      <button type="button" class="link-button" id="btn-clear">Xoá lịch sử và cài đặt</button>
+    </section>
+
+    <section class="view" data-view="connect" hidden>
+      <button type="button" class="back" data-goto="home">Bài tập</button>
+      <h1 tabindex="-1">Kết nối Pocket Master</h1>
+      <ol class="checklist">
+        <li>Cắm Pocket Master vào điện thoại hoặc máy tính bằng cáp hai đầu USB-C.</li>
+        <li>Chọn một preset bass sạch: tắt méo tiếng, chorus, delay và reverb.</li>
+        <li>Tắt trống và nhạc Bluetooth trên máy khi tập có chấm điểm. App tự phát tiếng click.</li>
+      </ol>
+      <div class="field">
+        <label for="device">Thiết bị thu</label>
+        <select id="device" disabled>
+          <option>Bật đầu vào để xem danh sách</option>
+        </select>
+      </div>
+      <button type="button" class="primary" id="btn-enable">Bật đầu vào âm thanh</button>
+      <p class="error" id="connect-error" role="alert" hidden></p>
+      <p class="notice" id="connect-warning" hidden></p>
+      <div class="meter-block" id="meter-block" hidden>
+        <div class="meter" aria-hidden="true"><div class="meter-fill" id="meter-fill"></div></div>
+        <p class="meter-label" id="meter-label" aria-live="polite">Gảy thử một nốt.</p>
+      </div>
+      <dl class="info" id="device-info" hidden></dl>
+    </section>
+
+    <section class="view" data-view="tune" hidden>
+      <button type="button" class="back" data-goto="home">Bài tập</button>
+      <h1 tabindex="-1">Lên dây</h1>
+      <p class="lead">Gảy từng dây buông và để ngân. Khi kim nằm giữa đủ lâu, dây đó được đánh dấu xong.</p>
+      <div class="tuner">
+        <p class="tuner-note"><span id="tuner-note">–</span><span class="tuner-octave" id="tuner-octave"></span></p>
+        <div class="tuner-scale" aria-hidden="true">
+          <span class="tuner-zone"></span>
+          <span class="tuner-needle" id="tuner-needle"></span>
+        </div>
+        <div class="tuner-ticks" aria-hidden="true"><span>−50</span><span>0</span><span>+50</span></div>
+        <p class="tuner-hint" id="tuner-hint" aria-live="polite">Đang chờ tiếng đàn.</p>
+      </div>
+      <ul class="strings" id="tuner-strings" aria-label="Các dây đã lên"></ul>
+      <p class="tuner-time" id="tuner-time" aria-live="polite"></p>
+      <button type="button" class="secondary" id="btn-tune-reset">Lên dây lại từ đầu</button>
+    </section>
+
+    <section class="view" data-view="calibrate" hidden>
+      <button type="button" class="back" data-goto="home">Bài tập</button>
+      <h1 tabindex="-1">Đo độ trễ</h1>
+      <p class="lead">Tiếng đàn đi qua cáp, Pocket Master và trình duyệt đều bị trễ một chút. App cần biết con số này để chấm nhịp cho đúng. Đo lại khi đổi thiết bị hoặc đổi tai nghe.</p>
+      <ol class="checklist">
+        <li>Bấm bắt đầu và nghe 4 tiếng đếm vào.</li>
+        <li>Gảy dây E buông đúng lúc nghe mỗi tiếng click trong 8 tiếng tiếp theo.</li>
+      </ol>
+      <div class="beats" id="cal-beats" aria-hidden="true"></div>
+      <button type="button" class="primary" id="btn-calibrate">Bắt đầu đo</button>
+      <p class="result-line" id="cal-result" aria-live="polite"></p>
+    </section>
+
+    <section class="view" data-view="practice" hidden>
+      <button type="button" class="back" data-goto="home">Bài tập</button>
+      <p class="lesson-kicker" id="lesson-day"></p>
+      <h1 tabindex="-1" id="lesson-title"></h1>
+      <p class="lead" id="lesson-focus"></p>
+
+      <div class="controls">
+        <div class="tempo" role="group" aria-label="Tốc độ">
+          <button type="button" class="icon-button" id="bpm-down" aria-label="Giảm 5 BPM">−</button>
+          <p class="tempo-value"><output id="bpm-value">60</output><span>BPM</span></p>
+          <button type="button" class="icon-button" id="bpm-up" aria-label="Tăng 5 BPM">+</button>
+        </div>
+        <button type="button" class="primary" id="btn-start">Bắt đầu</button>
+        <button type="button" class="secondary" id="btn-stop" hidden>Dừng</button>
+      </div>
+
+      <p class="session-status" id="session-status" aria-live="polite"></p>
+      <div class="countin" id="countin" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+      <div class="staff" id="staff"></div>
+      <div class="meter meter-thin" aria-hidden="true"><div class="meter-fill" id="practice-meter"></div></div>
+
+      <section class="results" id="results" hidden aria-labelledby="results-title">
+        <div class="score-row">
+          <p class="score"><span id="score-value">0</span><span class="score-max">/100</span></p>
+          <div>
+            <h2 id="results-title">Kết quả</h2>
+            <p class="headline" id="results-headline"></p>
+          </div>
+        </div>
+        <p class="notice" id="results-notice" hidden></p>
+        <dl class="metrics" id="metrics"></dl>
+        <h3>Lệch nhịp từng nốt</h3>
+        <div class="chart" id="timing-chart"></div>
+        <p class="legend"><span class="key key--good"></span>Lệch dưới 30 ms <span class="key key--ok"></span>Dưới 60 ms <span class="key key--off"></span>Lệch nhiều <span class="key key--wrong"></span>Sai nốt <span class="key key--missed">×</span>Thiếu nốt</p>
+        <h3>Nhận xét</h3>
+        <ul class="tips" id="tips"></ul>
+        <div class="actions" id="result-actions"></div>
+      </section>
+
+      <details class="more">
+        <summary>Tuỳ chọn</summary>
+        <div class="field">
+          <label for="sensitivity">Độ nhạy bắt tiếng gảy: <span id="sensitivity-value"></span></label>
+          <input type="range" id="sensitivity" min="0" max="1" step="0.1">
+          <p class="hint">Tăng nếu app hay báo thiếu nốt dù bạn đã gảy. Giảm nếu app báo nốt thừa khi bạn không gảy.</p>
+        </div>
+        <div class="field">
+          <label for="click-volume">Âm lượng tiếng click</label>
+          <input type="range" id="click-volume" min="0" max="1" step="0.05">
+        </div>
+        <div class="tool-row">
+          <button type="button" class="secondary" id="btn-demo">Chấm thử bằng bản mô phỏng</button>
+          <button type="button" class="secondary" id="btn-playback" disabled>Nghe lại lần vừa chơi</button>
+          <button type="button" class="secondary" id="btn-download" disabled>Tải bản thu (WAV)</button>
+        </div>
+        <p class="hint">Bản thu tải về có thể gửi cho Claude Code để tinh chỉnh cách chấm (xem README).</p>
+      </details>
+
+      <section class="history" aria-labelledby="history-title">
+        <h2 id="history-title">Lịch sử bài này</h2>
+        <p class="hint" id="history-empty">Chưa có lần tập nào.</p>
+        <div class="table-wrap">
+          <table id="history-table" hidden>
+            <thead><tr><th scope="col">Lúc</th><th scope="col">BPM</th><th scope="col">Điểm</th><th scope="col">Nhịp</th><th scope="col"><span class="visually-hidden">Sạch</span></th></tr></thead>
+            <tbody id="history-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+</body>
+</html>
