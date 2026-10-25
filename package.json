@@ -1,0 +1,16 @@
+{
+  "name": "bass-coach-30",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Web app luyện bass: nghe Sonicake Pocket Master qua USB và chấm các bài tập Tuần 1–2.",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node --test",
+    "check": "node scripts/check-syntax.mjs",
+    "simulate": "node scripts/simulate.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
